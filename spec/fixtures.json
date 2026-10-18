@@ -1,0 +1,106 @@
+{
+  "sampleData": {
+    "leaderboard": [
+      { "name": "Dhairya", "score": 97 },
+      { "name": "Mehul", "score": 86 },
+      { "name": "Sahil", "score": 99 },
+      { "name": "Prithvi", "score": 79 },
+      { "name": "Yegor", "score": 80 },
+      { "name": "Andrew", "score": 100 },
+      { "name": "Shaurya", "score": 94 }
+    ],
+    "checkIns": {
+      "ubco": ["Sahil", "Dhairya"],
+      "worldGym": ["Mehul", "Prithvi"],
+      "ymca": ["Alex"]
+    },
+    "suggestedFriends": ["Dhairya", "Sahil", "Yegor"]
+  },
+
+  "leaderboard": [
+    {
+      "name": "sample data ranks like the Android prototype",
+      "useSampleData": true,
+      "expected": ["Andrew", "Sahil", "Dhairya", "Shaurya", "Mehul", "Yegor", "Prithvi"]
+    },
+    {
+      "name": "ties are broken alphabetically",
+      "entries": [
+        { "name": "B", "score": 90 },
+        { "name": "A", "score": 90 },
+        { "name": "C", "score": 100 }
+      ],
+      "expected": ["C", "A", "B"]
+    },
+    {
+      "name": "empty board",
+      "entries": [],
+      "expected": []
+    }
+  ],
+
+  "calorieSummary": [
+    {
+      "name": "goal minus food plus exercise",
+      "goal": 2000,
+      "items": [
+        { "name": "Oats", "calories": 300, "meal": "breakfast" },
+        { "name": "Sandwich", "calories": 450, "meal": "lunch" },
+        { "name": "Burrito", "calories": 700, "meal": "dinner" },
+        { "name": "Run", "calories": 250, "meal": "exercise" }
+      ],
+      "food": 1450,
+      "exercise": 250,
+      "remaining": 800
+    },
+    {
+      "name": "over goal goes negative",
+      "goal": 500,
+      "items": [{ "name": "Pizza", "calories": 900, "meal": "dinner" }],
+      "food": 900,
+      "exercise": 0,
+      "remaining": -400
+    },
+    {
+      "name": "nothing logged",
+      "goal": 0,
+      "items": [],
+      "food": 0,
+      "exercise": 0,
+      "remaining": 0
+    }
+  ],
+
+  "checkIns": [
+    {
+      "name": "checking in appends to the gym",
+      "initial": { "ubco": ["Sahil"] },
+      "steps": [{ "action": "checkIn", "person": "Yegor", "gym": "ubco" }],
+      "expected": { "ubco": ["Sahil", "Yegor"] }
+    },
+    {
+      "name": "checking in elsewhere moves the person",
+      "initial": { "ubco": ["Sahil"] },
+      "steps": [
+        { "action": "checkIn", "person": "Yegor", "gym": "ubco" },
+        { "action": "checkIn", "person": "Yegor", "gym": "ymca" }
+      ],
+      "expected": { "ubco": ["Sahil"], "ymca": ["Yegor"] }
+    },
+    {
+      "name": "checking out leaves everyone else (Android string-trimming bug)",
+      "initial": { "worldGym": ["Mehul", "Prithvi"] },
+      "steps": [
+        { "action": "checkIn", "person": "Yegor", "gym": "worldGym" },
+        { "action": "checkOut", "person": "Yegor" }
+      ],
+      "expected": { "worldGym": ["Mehul", "Prithvi"] }
+    },
+    {
+      "name": "checking out when not checked in is a no-op",
+      "initial": { "anytimeFitness": ["Alex"] },
+      "steps": [{ "action": "checkOut", "person": "Yegor" }],
+      "expected": { "anytimeFitness": ["Alex"] }
+    }
+  ]
+}
