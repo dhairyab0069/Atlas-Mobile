@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 /** Everything the app persists, saved as one JSON file. */
 @Serializable
@@ -62,7 +64,7 @@ class AtlasStore(private val file: File?) {
             runCatching {
                 val tmp = File(target.parentFile, "${target.name}.tmp")
                 tmp.writeText(json.encodeToString(AtlasData.serializer(), new))
-                tmp.renameTo(target)
+                Files.move(tmp.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING)
             }.onFailure { System.err.println("Atlas: failed to save ${target.path}: $it") }
         }
     }
