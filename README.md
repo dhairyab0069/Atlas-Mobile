@@ -40,7 +40,7 @@ cd ios/AtlasCore && swift test          # logic tests, runs on macOS
 open ios/Atlas.xcodeproj                # run the app on a simulator / device
 ```
 
-**Android** (JDK 17+, Android SDK 35):
+**Android** (JDK 17+, Android SDK 36; Gradle 8.14 via the wrapper):
 
 ```sh
 cd android
@@ -49,7 +49,17 @@ cd android
 ```
 
 CI (`.github/workflows/ci.yml`) runs both test suites, builds the iOS app for the simulator and builds the
-Android debug APK on every push.
+Android debug APK on every pull request and every push to `main`.
+
+Toolchain: Kotlin 2.3, Android Gradle Plugin 8.13, Compose BOM 2025.12. Newer androidx releases need AGP 9, which is not
+adopted yet.
+
+## The shared spec
+
+`spec/fixtures.json` holds the sample data (leaderboard, check-ins, suggested friends) and test cases for leaderboard ordering,
+the calorie summary and the check-in board. `SharedSpecTests.swift` and `SharedSpecTest.kt` both read it, so the two apps cannot
+drift apart silently. A project page that runs the same file in the browser is at
+<https://dhairyab0069.github.io/atlas-mobile-io/>.
 
 ## Adding behaviour
 
